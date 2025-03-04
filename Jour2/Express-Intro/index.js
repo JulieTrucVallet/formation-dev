@@ -4,6 +4,8 @@ import movies from './data/movies.js'
 
 const app = express()
 // App take everything from express
+app.use(express.json())
+app.use(express.urlencoded({extended : true}))
 
 app.get('/', (request, response) => {
     return response.end(`Welcome to my movies API`)
@@ -25,6 +27,18 @@ app.get('/movies/:id', (request, response) => {
     // If I do not find a movie I send an error
     return response.status(200).json(movieByID)
     // I return the movieByID
+})
+
+app.post('/movies', (request, response) => {
+    console.log(request.body)
+    const {title, genre} = request.body
+    const newMovie = {
+        id : movies.length + 1,
+        title,
+        genre
+    }
+    movies.push(newMovie)
+    return response.status(201).json(newMovie)
 })
 
 app.listen(3000, () => {
