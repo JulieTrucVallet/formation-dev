@@ -6,12 +6,25 @@ const app = express()
 // App take everything from express
 
 app.get('/', (request, response) => {
-    return response.end(`Welcome to my first API`)
+    return response.end(`Welcome to my movies API`)
 })
 // Our first route that takes the path as first parameters, request and response and return a response
 
 app.get('/movies', (request, response) => {
     return response.json(movies)
+})
+
+app.get('/movies/:id', (request, response) => {
+    const movieID = request.params.id
+    // I save into a variable the value of the params
+    const movieByID = movies.find(movie => movie.id === parseInt(movieID))
+    // I search in the array where I do have an object with his ID matching the request.params.id
+    if(!movieByID){
+        return response.status(404).json({message : `Movie not found`})
+    }
+    // If I do not find a movie I send an error
+    return response.status(200).json(movieByID)
+    // I return the movieByID
 })
 
 app.listen(3000, () => {
